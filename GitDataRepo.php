@@ -80,7 +80,7 @@ class GitDataRepo {
       return;
     }
 
-    $cmd="git clone https://".$this->git["username"].":".$this->git["password"]."@bitbucket.org/shadiakiki1986/ffa-bdlreports-maps ".$this->repo;
+    $cmd="git clone https://".$this->git["username"].":".$this->git["password"]."@bitbucket.org/shadiakiki1986/".$nameOfRepo." ".$this->repo;
     system($cmd);
   }
 }
