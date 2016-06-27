@@ -1,0 +1,6 @@
+{
+    "name": "shadiakiki1986/test-coyl-git",
+    "require": {
+        "coyl/git": "*"
+    }
+}
