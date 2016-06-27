@@ -1,6 +1,25 @@
 {
-    "name": "shadiakiki1986/test-coyl-git",
+    "name": "shadiakiki1986/git-data-repo",
+    "description": "Manage saving/loading data from php to a git data repository",
+    "type": "library",
     "require": {
+        "monolog/monolog": "^1.19",
         "coyl/git": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "jakub-onderka/php-parallel-lint": "^0.9"
+    },
+    "autoload": {
+        "psr-4" : { "GitDataRepo\\" : "src/" }
+    },
+    "autoload-dev": {
+        "psr-4" : { "GitDataRepo\\" : "tests/" }
+    },
+    "scripts": {
+        "test": [
+            "parallel-lint . --exclude vendor",
+            "phpunit"
+        ]
     }
 }
