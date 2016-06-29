@@ -18,8 +18,22 @@ class GitDataRepo {
 
     $this->log->info("init");
     $this->log->info("repo path: ".$repo->getRepoPath());
-    $this->log->info("remote: ".$remote);
+    $remoteHiddenPassword = preg_replace(
+      "/http(s){0,1}:\/\/(.*):(.*)@(.*)/",
+      "http$1://$2:****@$4",
+      $remote);
+    $this->log->info("remote: ".$remoteHiddenPassword);
+  }
 
+  static function injectRemoteCredentials($url,$username,$password) {
+    $re = "/http(s){0,1}:\/\/([^:@]*)/";
+    if(!preg_match($re,$url)) throw new \Exception("Invalid URL format: ".$url);
+    $remote = "https://".$username.":".$password."@github.com/shadiakiki1986/git-data-repo-testDataRepo";
+    $remote = preg_replace(
+      $re,
+      "http$1://".$username.":".$password."@$2",
+      $url);
+    return $remote;
   }
 
   function keyFullPath($key) {
@@ -48,14 +62,28 @@ class GitDataRepo {
     $this->log->info("add ".$key);
     $this->repo->add($key);
 
-    $this->log->info("Commit");
-    $this->repo->commit("Committing from php");
-
-    $this->push();
+    $this->commitAndPush();
   }
   
-  function push() {
+  function rm($key) {
     $this->pull();
+    $fn = $this->keyFullPath($key);
+
+    if(!file_exists($fn)) {
+      $this->log->info("rm key '".$key."' does not exist.");
+      return;
+    }
+
+    $this->log->info("rm ".$key);
+    $this->repo->rm($key);
+
+    $this->commitAndPush();
+  }
+
+  function commitAndPush($msg="Committing from php") {
+    $this->log->info("Commit");
+    $this->repo->commit($msg);
+    # $this->pull();
     $this->log->info("Push");
     $this->repo->push($this->remote,"master");
   }
