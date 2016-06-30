@@ -1,10 +1,10 @@
 language: php
 before_install:
-- mkdir ~\/.ssh
+- mkdir ~/.ssh
 - openssl aes-256-cbc -K $encrypted_af2d8bb6d098_key -iv $encrypted_af2d8bb6d098_iv
-  -in id_rsa.enc -out ~\/.ssh/id_rsa -d
+  -in id_rsa.enc -out ~/.ssh/id_rsa -d
 - openssl aes-256-cbc -K $encrypted_af2d8bb6d098_key -iv $encrypted_af2d8bb6d098_iv
-  -in id_rsa.pub.enc -out ~\/.ssh/id_rsa.pub -d
+  -in id_rsa.pub.enc -out ~/.ssh/id_rsa.pub -d
 - composer install
 - echo -e "Host *\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - chmod 600 ~/.ssh/id_rsa*
