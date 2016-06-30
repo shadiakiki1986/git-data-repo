@@ -5,17 +5,8 @@ namespace GitDataRepo;
 class GitDataRepoTest extends \PHPUnit_Framework_TestCase {
 
     public function testUnmocked() {
-      $username = getenv("GITDATAREPO_USERNAME");
-      if(!$username) $this->markTestSkipped("Please define env var GITDATAREPO_USERNAME");
-      $password = getenv("GITDATAREPO_PASSWORD");
-      if(!$password) $this->markTestSkipped("Please define env var GITDATAREPO_PASSWORD");
-      $url = getenv("GITDATAREPO_URL");
-      if(!$url) $this->markTestSkipped("Please define env var GITDATAREPO_URL");
-
-      $remote = GitDataRepo::injectRemoteCredentials(
-        $url,
-        $username,
-        $password);
+      if(!getenv("GITDATAREPO_REMOTE")) $this->markTestSkipped("Please define env var GITDATAREPO_REMOTE");
+      $remote = getenv("GITDATAREPO_REMOTE");
 
       $repo1 = tempnam("/tmp","test");
       unlink($repo1);
@@ -44,13 +35,5 @@ class GitDataRepoTest extends \PHPUnit_Framework_TestCase {
       $this->assertEquals($bla2,"foo");
     }
 
-    public function testInject() {
-      $url = "https://github.com/shadiakiki1986/git-data-repo-testDataRepo";
-      $username = "bla";
-      $password = "bli";
-      $expected = "https://bla:bli@github.com/shadiakiki1986/git-data-repo-testDataRepo";
-      $actual = GitDataRepo::injectRemoteCredentials($url,$username,$password);
-      $this->assertEquals($actual,$expected);
-    }
 }
 

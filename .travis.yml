@@ -1,7 +1,16 @@
 language: php
 before_install:
-  - composer install
+- openssl aes-256-cbc -K $encrypted_af2d8bb6d098_key -iv $encrypted_af2d8bb6d098_iv
+  -in id_rsa.enc -out ~\/.ssh/id_rsa -d
+- openssl aes-256-cbc -K $encrypted_af2d8bb6d098_key -iv $encrypted_af2d8bb6d098_iv
+  -in id_rsa.pub.enc -out ~\/.ssh/id_rsa.pub -d
+- composer install
+- echo -e "Host *\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+- chmod 600 ~/.ssh/id_rsa*
+- eval `ssh-agent -s`
+- ssh-add ~/.ssh/id_rsa
 script:
-  - composer run-script test
+- composer run-script test
 sudo: false
-
+env:
+- GITDATAREPO_REMOTE=git@github.com:shadiakiki1986/git-data-repo-testDataRepo

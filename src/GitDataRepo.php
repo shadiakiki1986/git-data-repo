@@ -25,17 +25,6 @@ class GitDataRepo {
     $this->log->debug("remote: ".$remoteHiddenPassword);
   }
 
-  static function injectRemoteCredentials($url,$username,$password) {
-    $re = "/http(s){0,1}:\/\/([^:@]*)/";
-    if(!preg_match($re,$url)) throw new \Exception("Invalid URL format: ".$url);
-    $remote = "https://".$username.":".$password."@github.com/shadiakiki1986/git-data-repo-testDataRepo";
-    $remote = preg_replace(
-      $re,
-      "http$1://".$username.":".$password."@$2",
-      $url);
-    return $remote;
-  }
-
   function keyFullPath($key) {
     return $this->repo->getRepoPath()."/".$key;
   }
