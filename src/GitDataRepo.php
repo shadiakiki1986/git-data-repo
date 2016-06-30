@@ -16,13 +16,13 @@ class GitDataRepo {
         'php://stdout',
         $LOG_LEVEL)); // <<< uses a stream
 
-    $this->log->info("init");
-    $this->log->info("repo path: ".$repo->getRepoPath());
+    $this->log->debug("init");
+    $this->log->debug("repo path: ".$repo->getRepoPath());
     $remoteHiddenPassword = preg_replace(
       "/http(s){0,1}:\/\/(.*):(.*)@(.*)/",
       "http$1://$2:****@$4",
       $remote);
-    $this->log->info("remote: ".$remoteHiddenPassword);
+    $this->log->debug("remote: ".$remoteHiddenPassword);
   }
 
   static function injectRemoteCredentials($url,$username,$password) {
@@ -41,7 +41,7 @@ class GitDataRepo {
   }
 
   function pull() {
-    $this->log->info("pull from remote");
+    $this->log->debug("pull from remote");
     $this->repo->pull($this->remote,"master");
   }
 
@@ -59,7 +59,7 @@ class GitDataRepo {
       $fn,
       $data);
 
-    $this->log->info("add ".$key);
+    $this->log->debug("add ".$key);
     $this->repo->add($key);
 
     $this->commitAndPush();
@@ -70,21 +70,21 @@ class GitDataRepo {
     $fn = $this->keyFullPath($key);
 
     if(!file_exists($fn)) {
-      $this->log->info("rm key '".$key."' does not exist.");
+      $this->log->debug("rm key '".$key."' does not exist.");
       return;
     }
 
-    $this->log->info("rm ".$key);
+    $this->log->debug("rm ".$key);
     $this->repo->rm($key);
 
     $this->commitAndPush();
   }
 
   function commitAndPush($msg="Committing from php") {
-    $this->log->info("Commit");
+    $this->log->debug("Commit");
     $this->repo->commit($msg);
     # $this->pull();
-    $this->log->info("Push");
+    $this->log->debug("Push");
     $this->repo->push($this->remote,"master");
   }
 

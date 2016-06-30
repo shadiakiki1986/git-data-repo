@@ -1,0 +1,7 @@
+language: php
+before_install:
+  - composer install
+script:
+  - composer run-script test
+sudo: false
+
