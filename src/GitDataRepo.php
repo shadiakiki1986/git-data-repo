@@ -25,23 +25,23 @@ class GitDataRepo {
     $this->log->debug("remote: ".$remoteHiddenPassword);
   }
 
-  function keyFullPath($key) {
+  private function keyFullPath($key) {
     return $this->repo->getRepoPath()."/".$key;
   }
 
-  function pull() {
+  private function pull() {
     $this->log->debug("pull from remote");
     $this->repo->pull($this->remote,"master");
   }
 
-  function get($key) {
+  public function get($key) {
     $this->pull();
     $fn = $this->keyFullPath($key);
     if(!file_exists($fn)) return null;
     return(file_get_contents($fn));
   }
 
-  function set($key,$data) {
+  public function set($key,$data) {
     $this->pull();
     $fn = $this->keyFullPath($key);
     file_put_contents(
@@ -54,7 +54,7 @@ class GitDataRepo {
     $this->commitAndPush();
   }
   
-  function rm($key) {
+  public function rm($key) {
     $this->pull();
     $fn = $this->keyFullPath($key);
 
@@ -69,7 +69,7 @@ class GitDataRepo {
     $this->commitAndPush();
   }
 
-  function commitAndPush($msg="Committing from php") {
+  private function commitAndPush($msg="Committing from php") {
     $this->log->debug("Commit");
     $this->repo->commit($msg);
     # $this->pull();
