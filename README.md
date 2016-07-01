@@ -41,7 +41,7 @@ composer run-script test
  * Note the need to tar the public and private keys because `travis encrypt-file` cannot encrypt more than one file
 ```bash
 travis login # enter github credentials
-tar cvf ssh_keys.tar ~/.ssh/id_rsa ~/.ssh/id_rsa.pub
+tar cvf ssh_keys.tar -C ~/.ssh id_rsa id_rsa.pub
 travis encrypt-file ssh_keys.tar --add
 git add ssh_keys.tar.enc
 ```
