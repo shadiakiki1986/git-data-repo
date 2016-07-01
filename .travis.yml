@@ -9,6 +9,7 @@ before_install:
 - chmod 600 ~/.ssh/id_rsa*
 - eval `ssh-agent -s`
 - ssh-add ~/.ssh/id_rsa
+- git config --global user.name "travis-ci.org/shadiakiki1986/git-data-repo"
 script:
 - composer run-script test
 sudo: false
