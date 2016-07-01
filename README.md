@@ -20,9 +20,27 @@ travis login
 travis encrypt-file ~/.ssh/id_rsa.pub --add
 travis encrypt-file ~/.ssh/id_rsa     --add
 ```
-3. Configure ssh keys
-4. Copy private key to deploy keys setting of repository on github
-6. Run tests
+4. There seems to be something wrong with the travis encryption. I get `bad decrypt` when the automatically generated travis command in `.travis.yml` attempts to decrypt the files. To fix:
+  1. Expose the key/IV in the travis logs with `echo` in the `.travis.yml` file
+  2. copy the values
+  3. delete the logs on travis
+  4. re-encrypt with openssl
+```bash
+encrypted_af2d8bb6d098_key=value
+encrypted_af2d8bb6d098_iv=value
+openssl aes-256-cbc -K $encrypted_af2d8bb6d098_key -iv $encrypted_af2d8bb6d098_iv -in ~/.ssh/id_rsa.pub -out id_rsa.pub.enc -e
+openssl aes-256-cbc -K $encrypted_af2d8bb6d098_key -iv $encrypted_af2d8bb6d098_iv -in ~/.ssh/id_rsa     -out id_rsa.enc     -e
+```
+  5. test re-encryption
+```bash
+openssl aes-256-cbc -K $encrypted_af2d8bb6d098_key -iv $encrypted_af2d8bb6d098_iv -in id_rsa.pub.enc -out id_rsa.pub -d
+diff ~/.ssh/id_rsa.pub id_rsa.pub
+openssl aes-256-cbc -K $encrypted_af2d8bb6d098_key -iv $encrypted_af2d8bb6d098_iv -in id_rsa.pub.enc -out id_rsa     -d
+diff ~/.ssh/id_rsa id_rsa
+```
+5. Configure ssh keys
+6. Copy private key to deploy keys setting of repository on github
+7. Run tests
 ```bash
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa
