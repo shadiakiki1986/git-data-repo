@@ -12,7 +12,20 @@ PHP library to manage the storage of key-value pairs in a git repository.
 Check [tests/GitDataRepoTest.php](tests/GitDataRepoTest.php)
 
 # Testing Using SSH keys
-1. Create a repository on github
+1. Create a repository on github/bitbucket/etc.
+2. initialize it
+```bash
+mkdir /path/to/your/project
+cd /path/to/your/project
+git init
+git remote add origin https://shadiakiki1986@bitbucket.org/shadiakiki1986/ffa-bdlreports-maps.git
+```
+2. make first commit
+echo "shadiakiki1986" >> contributors.txt
+git add contributors.txt
+git commit -m 'Initial commit with contributors'
+git push -u origin master
+```
 2. Generate ssh keys: `ssh-keygen -t rsa -b 4096 -C "shadiakiki1986@gmail.com"`
 6. Copy public key to deploy keys setting of repository on github
 5. Configure ssh keys
