@@ -83,6 +83,9 @@ class GitDataRepo {
     $this->log->debug("Push");
     // I don't understand the push function below
     // https://github.com/coyl/git/blob/master/src/Coyl/Git/GitRepo.php#L595
+    // After the push, I would always be left with a git status `your repo is ahead of master`
+    // If I just `git pull`, then the msg goes away.
+    // Anyway, I'm solving it with the run call below
     //$this->repo->push($this->remote,"master");
     $this->repo->run("push");
   }
@@ -92,8 +95,9 @@ class GitDataRepo {
    * authFn: e.g. __DIR__."/../auth.json"
    * remote, e.g. https://bitbucket.org/shadiakiki1986/ffa-bdlreports-maps
    * loglevel=\Monolog\Logger::WARNING; // isset($argc)?\Monolog\Logger::DEBUG:\Monolog\Logger::WARNING;
+   * gitconfig: e.g. array('user.email'=>'my@email.com','user.name'=>'my name')
   */
-  public static function initGdrPersistentFromAuthJson($repoPath,$authFn,$remoteUrl,$loglevel) {
+  public static function initGdrPersistentFromAuthJson($repoPath,$authFn,$remoteUrl,$loglevel,$gitconfig=array()) {
     // copied from accounting-bdlreports-mapeditor/action.php
 
     // check can put files here
@@ -110,6 +114,13 @@ class GitDataRepo {
     $isgit=is_dir($repoPath) && file_exists($repoPath . "/.git") && is_dir($repoPath . "/.git");
     if (!$isgit) {
       $gr = \Coyl\Git\GitRepo::create($repoPath,$remote);
+
+      # run some git config if needed
+      foreach($gitconfig as $k=>$v) {
+        $cmd = "config ".$k." '".$v."'";
+        $gr->run($cmd);
+      }
+
     } else {
       $gr = new \Coyl\Git\GitRepo($repoPath,false,false);
     }
