@@ -81,7 +81,10 @@ class GitDataRepo {
     $this->repo->commit($msg);
     # $this->pull();
     $this->log->debug("Push");
-    $this->repo->push($this->remote,"master");
+    // I don't understand the push function below
+    // https://github.com/coyl/git/blob/master/src/Coyl/Git/GitRepo.php#L595
+    //$this->repo->push($this->remote,"master");
+    $this->repo->run("push");
   }
 
   /* repoPath: data repo path since using git-data-repo

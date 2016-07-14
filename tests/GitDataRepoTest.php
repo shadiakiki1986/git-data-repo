@@ -20,16 +20,21 @@ class GitDataRepoTest extends \PHPUnit_Framework_TestCase {
 
       // $repo3 = "/home/shadi/Development/git-data-repo-testDataRepo";
 
-      $this->gdr1->rm("bla");
+      $msgUpToDate = "On branch master
+Your branch is up-to-date with 'origin/master'.
+nothing to commit, working directory clean
+";
 
+      $this->gdr1->rm("bla");
+      $this->assertEquals($gr1->status(),$msgUpToDate);
       $bla = $this->gdr1->get("bla");
       $this->assertTrue(is_null($bla));
-
+      $this->assertEquals($gr1->status(),$msgUpToDate);
       $this->gdr1->set("bla","foo");
+      $this->assertEquals($gr1->status(),$msgUpToDate);
       $bla1 = $this->gdr1->get("bla");
       $this->assertEquals($bla1,"foo");
-
-#$this->gdr1->push();
+      $this->assertEquals($gr1->status(),$msgUpToDate);
 
       $bla2 = $this->gdr2->get("bla");
       $this->assertEquals($bla2,"foo");
