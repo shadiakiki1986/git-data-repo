@@ -44,6 +44,13 @@ class GitDataRepo {
   public function set($key,$data) {
     $this->pull();
     $fn = $this->keyFullPath($key);
+    if(file_exists($fn)) {
+      $existing = file_get_contents($fn);
+      if($existing==$data) {
+        $this->log->debug('data is same as in repo. Not overwriting.');
+        return;
+      }
+    }
     file_put_contents(
       $fn,
       $data);

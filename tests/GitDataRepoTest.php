@@ -44,4 +44,18 @@ class GitDataRepoTest extends \PHPUnit_Framework_TestCase {
       $this->assertEquals($actual,$expected);
     }
 
+    public function testSetTwice() {
+      if(!getenv("GITDATAREPO_REMOTE")) $this->markTestSkipped("Please define env var GITDATAREPO_REMOTE");
+      $remote = getenv("GITDATAREPO_REMOTE");
+
+      $repo1 = tempnam("/tmp","test");
+      unlink($repo1);
+      $gr1 = \Coyl\Git\GitRepo::create($repo1,$remote);
+      $this->gdr1 = new GitDataRepo($gr1,$remote,\Monolog\Logger::WARNING);
+
+      $this->gdr1->rm("bla");
+      $this->gdr1->set("bla","foo");
+      $this->gdr1->set("bla","foo");
+      $this->assertTrue(true);
+    }
 }
