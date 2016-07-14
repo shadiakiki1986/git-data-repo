@@ -35,5 +35,13 @@ class GitDataRepoTest extends \PHPUnit_Framework_TestCase {
       $this->assertEquals($bla2,"foo");
     }
 
-}
+    public function testInject() {
+      $url = "https://github.com/shadiakiki1986/git-data-repo-testDataRepo";
+      $username = "bla";
+      $password = "bli";
+      $expected = "https://bla:bli@github.com/shadiakiki1986/git-data-repo-testDataRepo";
+      $actual = GitDataRepo::injectRemoteCredentials($url,$username,$password);
+      $this->assertEquals($actual,$expected);
+    }
 
+}

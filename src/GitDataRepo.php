@@ -77,4 +77,44 @@ class GitDataRepo {
     $this->repo->push($this->remote,"master");
   }
 
+  /* repoPath: data repo path since using git-data-repo
+   *           e.g. /var/cache/ffamfe_tcm
+   * authFn: e.g. __DIR__."/../auth.json"
+   * remote, e.g. https://bitbucket.org/shadiakiki1986/ffa-bdlreports-maps
+   * loglevel=\Monolog\Logger::WARNING; // isset($argc)?\Monolog\Logger::DEBUG:\Monolog\Logger::WARNING;
+  */
+  public static function initGdrPersistentFromAuthJson($repoPath,$authFn,$remoteUrl,$loglevel) {
+    // copied from accounting-bdlreports-mapeditor/action.php
+
+    // check can put files here
+    if(!is_writable($repoPath)) throw new \Exception("Cache folder '".$repoPath."' is not writable. You may need `[sudo] chown www-data:www-data -R ".$repoPath."`");
+
+    // get remote credentials
+    $remote=null;
+    if(!file_exists($authFn)) throw new \Exception("File not found '".$authFn."'");
+    $remote=json_decode(file_get_contents($authFn),true);
+    $remote=$remote["http-basic"]["bitbucket.org"];
+    $remote=GitDataRepo::injectRemoteCredentials($remoteUrl,$remote["username"],$remote["password"]);
+
+    # copied from https://github.com/coyl/git/blob/master/src/Coyl/Git/GitRepo.php#L43
+    $isgit=is_dir($repoPath) && file_exists($repoPath . "/.git") && is_dir($repoPath . "/.git");
+    if (!$isgit) {
+      $gr = \Coyl\Git\GitRepo::create($repoPath,$remote);
+    } else {
+      $gr = new \Coyl\Git\GitRepo($repoPath,false,false);
+    }
+
+    return new \GitDataRepo\GitDataRepo($gr,$remote,$loglevel);
+  }
+
+  static function injectRemoteCredentials($url,$username,$password) {
+    $re = "/http(s){0,1}:\/\/([^:@]*)/";
+    if(!preg_match($re,$url)) throw new \Exception("Invalid URL format: ".$url);
+    $remote = preg_replace(
+     $re,
+      "http$1://".$username.":".$password."@$2",
+      $url);
+    return $remote;
+  }
+ 
 }
