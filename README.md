@@ -48,6 +48,14 @@ export GITDATAREPO_REMOTE=https://shadiakiki1986:veggiepizza@github.com/shadiaki
 composer run-script test
 ```
 
+# Note on bitbucket
+For bitbucket repos, one needs
+```bash
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+# Omit --global to set the identity only in this repository
+```
+
 # Developer notes: travis with ssh keys
 1. Follow section above on `testing using ssh keys`
 3. Encrypt `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub` using [travis CLI](https://docs.travis-ci.com/user/encrypting-files/#Encrypting-multiple-files)
