@@ -30,12 +30,12 @@ class GitDataRepo {
   }
 
   private function pull() {
-    $this->log->debug("pull step 1: push any stale data");
-    $this->repo->run("push");
-
-    $this->log->debug("pull step 2: pull from remote (using run)");
+    $this->log->debug("pull step 1/2: pull from remote (using run)");
     #$this->repo->pull($this->remote,"master");
     $this->repo->run("pull");
+
+    $this->log->debug("pull step 2/2: push any stale data");
+    $this->repo->run("push");
   }
 
   public function get($key) {
