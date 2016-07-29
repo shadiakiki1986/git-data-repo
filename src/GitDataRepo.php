@@ -31,7 +31,8 @@ class GitDataRepo {
 
   private function pull() {
     $this->log->debug("pull from remote");
-    $this->repo->pull($this->remote,"master");
+    #$this->repo->pull($this->remote,"master");
+    $this->repo->run("pull");
   }
 
   public function get($key) {
