@@ -1,9 +1,11 @@
 # git-data-repo
 PHP library to manage the storage of key-value pairs in a git repository.
 
-[![Build Status](https://travis-ci.org/shadiakiki1986/git-data-repo.svg?branch=master)](http://travis-ci.org/shadiakiki1986/git-data-repo)
-
 [packagist](https://packagist.org/packages/shadiakiki1986/git-data-repo)
+[![Build Status](https://travis-ci.org/shadiakiki1986/git-data-repo.svg?branch=master)](http://travis-ci.org/shadiakiki1986/git-data-repo)
+[![Code Climate](https://codeclimate.com/github/shadiakiki1986/git-data-repo/badges/gpa.svg)](https://codeclimate.com/github/shadiakiki1986/git-data-repo)
+[![Test Coverage](https://codeclimate.com/github/shadiakiki1986/git-data-repo/badges/coverage.svg)](https://codeclimate.com/github/shadiakiki1986/git-data-repo/coverage)
+[![Issue Count](https://codeclimate.com/github/shadiakiki1986/git-data-repo/badges/issue_count.svg)](https://codeclimate.com/github/shadiakiki1986/git-data-repo)
 
 # Installing
 `composer install`
