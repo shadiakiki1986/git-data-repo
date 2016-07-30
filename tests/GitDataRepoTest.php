@@ -22,7 +22,7 @@ class GitDataRepoTest extends \PHPUnit_Framework_TestCase {
 
       $msgUpToDate = "/Your branch is up-to-date/";
 
-      $this->gdr1->unset("bla");
+      $this->gdr1->remove("bla");
       $this->assertRegExp($msgUpToDate,$gr1->status());
       $bla = $this->gdr1->get("bla");
       $this->assertTrue(is_null($bla));
@@ -62,7 +62,7 @@ class GitDataRepoTest extends \PHPUnit_Framework_TestCase {
       $gr1 = \Coyl\Git\GitRepo::create($repo1,$remote);
       $this->gdr1 = new GitDataRepo($gr1,$remote,\Monolog\Logger::WARNING);
 
-      $this->gdr1->unset("bla");
+      $this->gdr1->remove("bla");
       $this->gdr1->set("bla","foo");
       $this->gdr1->set("bla","foo");
       $this->assertTrue(true);

@@ -65,16 +65,16 @@ class GitDataRepo {
     $this->commitAndPush();
   }
   
-  public function unset($key) {
+  public function remove($key) {
     $this->pull();
     $fn = $this->keyFullPath($key);
 
     if(!file_exists($fn)) {
-      $this->log->debug("unset key '".$key."' does not exist.");
+      $this->log->debug("remove key '".$key."' does not exist.");
       return;
     }
 
-    $this->log->debug("unset ".$key);
+    $this->log->debug("remove ".$key);
     $this->repo->rm($key);
 
     $this->commitAndPush();
