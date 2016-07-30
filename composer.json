@@ -21,7 +21,7 @@
         "test": [
             "parallel-lint . --exclude vendor",
             "phpunit --verbose --coverage-clover build/logs/clover.xml",
-            ': "${CODECLIMATE_REPO_TOKEN:?Missing codeclimate token => will not publish report}" && ./vendor/bin/test-reporter'
+            ": \"${CODECLIMATE_REPO_TOKEN:?Missing codeclimate token => will not publish report}\" && ./vendor/bin/test-reporter"
         ]
     }
 }
