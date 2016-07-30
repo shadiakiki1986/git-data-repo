@@ -2,6 +2,7 @@
     "name": "shadiakiki1986/git-data-repo",
     "description": "Manage saving/loading data from php to a git data repository",
     "type": "library",
+    "keywords": [ "git", "data", "repository", "data repository" ],
     "require": {
         "monolog/monolog": "^1.19",
         "coyl/git": "*"
@@ -9,7 +10,8 @@
     "require-dev": {
         "phpunit/phpunit": "*",
         "jakub-onderka/php-parallel-lint": "^0.9",
-        "codeclimate/php-test-reporter": "dev-master"
+        "codeclimate/php-test-reporter": "dev-master",
+        "phpmd/phpmd": "^2.4"
     },
     "autoload": {
         "psr-4" : { "GitDataRepo\\" : "src/" }
@@ -20,6 +22,7 @@
     "scripts": {
         "test": [
             "parallel-lint . --exclude vendor",
+            "./vendor/bin/phpmd . text cleancode,codesize,controversial,design,naming,unusedcode --exclude data,puphpet,vendor",
             "phpunit --verbose --coverage-clover build/logs/clover.xml",
             ": \"${CODECLIMATE_REPO_TOKEN:?Missing codeclimate token => will not publish report}\" && ./vendor/bin/test-reporter"
         ]

@@ -4,6 +4,9 @@ namespace GitDataRepo;
 
 class GitDataRepoTest extends \PHPUnit_Framework_TestCase {
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+    */
     public function testUnmocked() {
       if(!getenv("GITDATAREPO_REMOTE")) $this->markTestSkipped("Please define env var GITDATAREPO_REMOTE");
       $remote = getenv("GITDATAREPO_REMOTE");
@@ -37,6 +40,9 @@ class GitDataRepoTest extends \PHPUnit_Framework_TestCase {
       $this->assertEquals($bla2,"foo");
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+    */
     public function testInject() {
       $url = "https://github.com/shadiakiki1986/git-data-repo-testDataRepo";
       $username = "bla";
@@ -53,6 +59,9 @@ class GitDataRepoTest extends \PHPUnit_Framework_TestCase {
       $this->assertEquals($actual,$expected);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+    */
     public function testSetTwice() {
       if(!getenv("GITDATAREPO_REMOTE")) $this->markTestSkipped("Please define env var GITDATAREPO_REMOTE");
       $remote = getenv("GITDATAREPO_REMOTE");

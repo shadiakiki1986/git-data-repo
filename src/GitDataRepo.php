@@ -93,12 +93,15 @@ class GitDataRepo {
     $this->repo->run("push");
   }
 
-  /* repoPath: data repo path since using git-data-repo
+  /**
+   * repoPath: data repo path since using git-data-repo
    *           e.g. /var/cache/ffamfe_tcm
    * authFn: e.g. __DIR__."/../auth.json"
    * remote, e.g. https://bitbucket.org/shadiakiki1986/ffa-bdlreports-maps
    * loglevel=\Monolog\Logger::WARNING; // isset($argc)?\Monolog\Logger::DEBUG:\Monolog\Logger::WARNING;
    * gitconfig: e.g. array('user.email'=>'my@email.com','user.name'=>'my name')
+   *
+   * @SuppressWarnings(PHPMD.StaticAccess)
   */
   public static function initGdrPersistentFromAuthJson($repoPath,$authFn,$remoteUrl,$loglevel,$gitconfig=array()) {
     // copied from accounting-bdlreports-mapeditor/action.php
@@ -115,17 +118,17 @@ class GitDataRepo {
 
     # copied from https://github.com/coyl/git/blob/master/src/Coyl/Git/GitRepo.php#L43
     $isgit=is_dir($repoPath) && file_exists($repoPath . "/.git") && is_dir($repoPath . "/.git");
-    if (!$isgit) {
-      $gitRepo = \Coyl\Git\GitRepo::create($repoPath,$remote);
-
-      # run some git config if needed
-      foreach($gitconfig as $k=>$v) {
-        $cmd = "config ".$k." '".$v."'";
-        $gitRepo->run($cmd);
-      }
-
-    } else {
+    if ($isgit) {
       $gitRepo = new \Coyl\Git\GitRepo($repoPath,false,false);
+      return new \GitDataRepo\GitDataRepo($gitRepo,$remote,$loglevel);
+    }
+
+    # case of new git repo
+    $gitRepo = \Coyl\Git\GitRepo::create($repoPath,$remote);
+    # run some git config if needed
+    foreach($gitconfig as $k=>$v) {
+      $cmd = "config ".$k." '".$v."'";
+      $gitRepo->run($cmd);
     }
 
     return new \GitDataRepo\GitDataRepo($gitRepo,$remote,$loglevel);
