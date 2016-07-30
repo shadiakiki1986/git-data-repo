@@ -58,7 +58,9 @@ git config --global user.name "Your Name"
 # Omit --global to set the identity only in this repository
 ```
 
-# Developer notes: travis with ssh keys
+# Developer notes
+
+## travis with ssh keys
 1. Follow section above on `testing using ssh keys`
 3. Encrypt `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub` using [travis CLI](https://docs.travis-ci.com/user/encrypting-files/#Encrypting-multiple-files)
  * Note the need to tar the public and private keys because `travis encrypt-file` cannot encrypt more than one file
@@ -74,4 +76,15 @@ References
 * https://gist.github.com/lukewpatterson/4242707
 * https://docs.travis-ci.com/user/private-dependencies/
 
+## phpmd
+`phpmd` issued warnings about static access to classes.
+I disabled these warnings for the functions in subject.
+To see them, check `grep SuppressWarnings * -r --exclude-dir=vendor`
 
+## phpcs
+If `phpcs` reports errors that can be fixed automatically, run:
+```bash
+vendor/bin/phpcbf src/
+vendor/bin/phpcbf src/
+```
+and then commit the changes
