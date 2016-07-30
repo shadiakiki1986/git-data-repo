@@ -1,7 +1,14 @@
 # git-data-repo
 PHP library to manage the storage of key-value pairs in a git repository.
 
-[packagist](https://packagist.org/packages/shadiakiki1986/git-data-repo)
+[![Latest Stable Version](https://poser.pugx.org/shadiakiki1986/git-data-repo/version)](https://packagist.org/packages/shadiakiki1986/git-data-repo)
+[![Total Downloads](https://poser.pugx.org/shadiakiki1986/git-data-repo/downloads)](https://packagist.org/packages/shadiakiki1986/git-data-repo)
+[![Latest Unstable Version](https://poser.pugx.org/shadiakiki1986/git-data-repo/v/unstable)](//packagist.org/packages/shadiakiki1986/git-data-repo)
+[![License](https://poser.pugx.org/shadiakiki1986/git-data-repo/license)](https://packagist.org/packages/shadiakiki1986/git-data-repo)
+[![Monthly Downloads](https://poser.pugx.org/shadiakiki1986/git-data-repo/d/monthly)](https://packagist.org/packages/shadiakiki1986/git-data-repo)
+[![Daily Downloads](https://poser.pugx.org/shadiakiki1986/git-data-repo/d/daily)](https://packagist.org/packages/shadiakiki1986/git-data-repo)
+[![composer.lock available](https://poser.pugx.org/shadiakiki1986/git-data-repo/composerlock)](https://packagist.org/packages/shadiakiki1986/git-data-repo)
+
 [![Build Status](https://travis-ci.org/shadiakiki1986/git-data-repo.svg?branch=master)](http://travis-ci.org/shadiakiki1986/git-data-repo)
 [![Code Climate](https://codeclimate.com/github/shadiakiki1986/git-data-repo/badges/gpa.svg)](https://codeclimate.com/github/shadiakiki1986/git-data-repo)
 [![Test Coverage](https://codeclimate.com/github/shadiakiki1986/git-data-repo/badges/coverage.svg)](https://codeclimate.com/github/shadiakiki1986/git-data-repo/coverage)
@@ -88,3 +95,6 @@ vendor/bin/phpcbf src/
 vendor/bin/phpcbf src/
 ```
 and then commit the changes
+
+## badges
+Badges from [badge poser](https://poser.pugx.org/show/shadiakiki1986/git-data-repo#badges)
