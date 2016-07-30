@@ -3,7 +3,7 @@
 namespace GitDataRepo;
 
 class GitDataRepo {
-  function __construct($repo,$remote,$LOG_LEVEL=\Monolog\Logger::WARNING) {
+  function __construct($repo,$remote,$logLevel=\Monolog\Logger::WARNING) {
     assert($repo instanceof \Coyl\Git\GitRepo);
     assert($repo->test_git());
     $this->repo = $repo;
@@ -14,7 +14,7 @@ class GitDataRepo {
     $this->log->pushHandler(
       new \Monolog\Handler\StreamHandler(
         'php://stdout',
-        $LOG_LEVEL)); // <<< uses a stream
+        $logLevel)); // <<< uses a stream
 
     $this->log->debug("init");
     $this->log->debug("repo path: ".$repo->getRepoPath());
@@ -40,23 +40,23 @@ class GitDataRepo {
 
   public function get($key) {
     $this->pull();
-    $fn = $this->keyFullPath($key);
-    if(!file_exists($fn)) return null;
-    return(file_get_contents($fn));
+    $key2 = $this->keyFullPath($key);
+    if(!file_exists($key2)) return null;
+    return(file_get_contents($key2));
   }
 
   public function set($key,$data) {
     $this->pull();
-    $fn = $this->keyFullPath($key);
-    if(file_exists($fn)) {
-      $existing = file_get_contents($fn);
+    $key2 = $this->keyFullPath($key);
+    if(file_exists($key2)) {
+      $existing = file_get_contents($key2);
       if($existing==$data) {
         $this->log->debug('data is same as in repo. Not overwriting.');
         return;
       }
     }
     file_put_contents(
-      $fn,
+      $key2,
       $data);
 
     $this->log->debug("add ".$key);
@@ -67,9 +67,8 @@ class GitDataRepo {
   
   public function remove($key) {
     $this->pull();
-    $fn = $this->keyFullPath($key);
 
-    if(!file_exists($fn)) {
+    if(!file_exists($this->keyFullPath($key))) {
       $this->log->debug("remove key '".$key."' does not exist.");
       return;
     }
@@ -117,26 +116,26 @@ class GitDataRepo {
     # copied from https://github.com/coyl/git/blob/master/src/Coyl/Git/GitRepo.php#L43
     $isgit=is_dir($repoPath) && file_exists($repoPath . "/.git") && is_dir($repoPath . "/.git");
     if (!$isgit) {
-      $gr = \Coyl\Git\GitRepo::create($repoPath,$remote);
+      $gitRepo = \Coyl\Git\GitRepo::create($repoPath,$remote);
 
       # run some git config if needed
       foreach($gitconfig as $k=>$v) {
         $cmd = "config ".$k." '".$v."'";
-        $gr->run($cmd);
+        $gitRepo->run($cmd);
       }
 
     } else {
-      $gr = new \Coyl\Git\GitRepo($repoPath,false,false);
+      $gitRepo = new \Coyl\Git\GitRepo($repoPath,false,false);
     }
 
-    return new \GitDataRepo\GitDataRepo($gr,$remote,$loglevel);
+    return new \GitDataRepo\GitDataRepo($gitRepo,$remote,$loglevel);
   }
 
   static function injectRemoteCredentials($url,$username,$password) {
-    $re = "/http(s){0,1}:\/\/([^:@]*)/";
-    if(!preg_match($re,$url)) throw new \Exception("Invalid URL format: ".$url);
+    $regExp = "/http(s){0,1}:\/\/([^:@]*)/";
+    if(!preg_match($regExp,$url)) throw new \Exception("Invalid URL format: ".$url);
     $remote = preg_replace(
-     $re,
+     $regExp,
       "http$1://".$username.":".$password."@$2",
       $url);
     return $remote;
