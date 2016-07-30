@@ -24,7 +24,7 @@
         "test": [
             "parallel-lint . --exclude vendor",
             "./vendor/bin/phpmd . text cleancode,codesize,controversial,design,naming,unusedcode --exclude data,puphpet,vendor",
-            "# ./vendor/bin/phpcs --standard=./phpcs.xml -np --report=summary .",
+            "./vendor/bin/phpcs --standard=./phpcs.xml -np --report=summary .",
             "phpunit --verbose --coverage-clover build/logs/clover.xml",
             ": \"${CODECLIMATE_REPO_TOKEN:?Missing codeclimate token => will not publish report}\" && ./vendor/bin/test-reporter"
         ]
