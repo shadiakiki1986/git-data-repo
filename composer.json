@@ -8,7 +8,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "*",
-        "jakub-onderka/php-parallel-lint": "^0.9"
+        "jakub-onderka/php-parallel-lint": "^0.9",
+        "codeclimate/php-test-reporter": "dev-master"
     },
     "autoload": {
         "psr-4" : { "GitDataRepo\\" : "src/" }
@@ -19,7 +20,8 @@
     "scripts": {
         "test": [
             "parallel-lint . --exclude vendor",
-            "phpunit --verbose"
+            "phpunit --verbose --coverage-clover build/logs/clover.xml",
+            ': "${CODECLIMATE_REPO_TOKEN:?Missing codeclimate token => will not publish report}" && ./vendor/bin/test-reporter'
         ]
     }
 }
