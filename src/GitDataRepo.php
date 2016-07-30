@@ -2,96 +2,110 @@
 
 namespace GitDataRepo;
 
-class GitDataRepo {
-  function __construct($repo,$remote,$logLevel=\Monolog\Logger::WARNING) {
-    assert($repo instanceof \Coyl\Git\GitRepo);
-    assert($repo->test_git());
-    $this->repo = $repo;
-    $this->remote = $remote;
+class GitDataRepo
+{
+    public function __construct($repo, $remote, $logLevel = \Monolog\Logger::WARNING)
+    {
+        assert($repo instanceof \Coyl\Git\GitRepo);
+        assert($repo->test_git());
+        $this->repo = $repo;
+        $this->remote = $remote;
 
-    $this->log = new \Monolog\Logger('GitDataRepo');
-    // http://stackoverflow.com/a/25787259/4126114
-    $this->log->pushHandler(
-      new \Monolog\Handler\StreamHandler(
-        'php://stdout',
-        $logLevel)); // <<< uses a stream
+        $this->log = new \Monolog\Logger('GitDataRepo');
+        // http://stackoverflow.com/a/25787259/4126114
+        $this->log->pushHandler(
+            new \Monolog\Handler\StreamHandler(
+                'php://stdout',
+                $logLevel
+            )
+        ); // <<< uses a stream
 
-    $this->log->debug("init");
-    $this->log->debug("repo path: ".$repo->getRepoPath());
-    $remoteHiddenPassword = preg_replace(
-      "/http(s){0,1}:\/\/(.*):(.*)@(.*)/",
-      "http$1://$2:****@$4",
-      $remote);
-    $this->log->debug("remote: ".$remoteHiddenPassword);
-  }
-
-  private function keyFullPath($key) {
-    return $this->repo->getRepoPath()."/".$key;
-  }
-
-  private function pull() {
-    $this->log->debug("pull step 1/2: pull from remote (using run)");
-    #$this->repo->pull($this->remote,"master");
-    $this->repo->run("pull");
-
-    $this->log->debug("pull step 2/2: push any stale data");
-    $this->repo->run("push");
-  }
-
-  public function get($key) {
-    $this->pull();
-    $key2 = $this->keyFullPath($key);
-    if(!file_exists($key2)) return null;
-    return(file_get_contents($key2));
-  }
-
-  public function set($key,$data) {
-    $this->pull();
-    $key2 = $this->keyFullPath($key);
-    if(file_exists($key2)) {
-      $existing = file_get_contents($key2);
-      if($existing==$data) {
-        $this->log->debug('data is same as in repo. Not overwriting.');
-        return;
-      }
+        $this->log->debug("init");
+        $this->log->debug("repo path: ".$repo->getRepoPath());
+        $remoteHiddenPassword = preg_replace(
+            "/http(s){0,1}:\/\/(.*):(.*)@(.*)/",
+            "http$1://$2:****@$4",
+            $remote
+        );
+        $this->log->debug("remote: ".$remoteHiddenPassword);
     }
-    file_put_contents(
-      $key2,
-      $data);
 
-    $this->log->debug("add ".$key);
-    $this->repo->add($key);
+    private function keyFullPath($key)
+    {
+        return $this->repo->getRepoPath()."/".$key;
+    }
 
-    $this->commitAndPush();
-  }
+    private function pull()
+    {
+        $this->log->debug("pull step 1/2: pull from remote (using run)");
+        #$this->repo->pull($this->remote,"master");
+        $this->repo->run("pull");
+
+        $this->log->debug("pull step 2/2: push any stale data");
+        $this->repo->run("push");
+    }
+
+    public function get($key)
+    {
+        $this->pull();
+        $key2 = $this->keyFullPath($key);
+        if (!file_exists($key2)) {
+            return null;
+        }
+        return(file_get_contents($key2));
+    }
+
+    public function set($key, $data)
+    {
+        $this->pull();
+        $key2 = $this->keyFullPath($key);
+        if (file_exists($key2)) {
+            $existing = file_get_contents($key2);
+            if ($existing==$data) {
+                $this->log->debug('data is same as in repo. Not overwriting.');
+                return;
+            }
+        }
+        file_put_contents(
+            $key2,
+            $data
+        );
+
+        $this->log->debug("add ".$key);
+        $this->repo->add($key);
+
+        $this->commitAndPush();
+    }
   
-  public function remove($key) {
-    $this->pull();
+    public function remove($key)
+    {
+        $this->pull();
 
-    if(!file_exists($this->keyFullPath($key))) {
-      $this->log->debug("remove key '".$key."' does not exist.");
-      return;
+        if (!file_exists($this->keyFullPath($key))) {
+            $this->log->debug("remove key '".$key."' does not exist.");
+            return;
+        }
+
+        $this->log->debug("remove ".$key);
+        $this->repo->rm($key);
+
+        $this->commitAndPush();
     }
 
-    $this->log->debug("remove ".$key);
-    $this->repo->rm($key);
-
-    $this->commitAndPush();
-  }
-
-  private function commitAndPush($msg="Committing from php") {
-    $this->log->debug("Commit");
-    $this->repo->commit($msg);
-    # $this->pull();
-    $this->log->debug("Push");
-    // I don't understand the push function below
-    // https://github.com/coyl/git/blob/master/src/Coyl/Git/GitRepo.php#L595
-    // After the push, I would always be left with a git status `your repo is ahead of master`
-    // If I just `git pull`, then the msg goes away.
-    // Anyway, I'm solving it with the run call below
-    //$this->repo->push($this->remote,"master");
-    $this->repo->run("push");
-  }
+    private function commitAndPush($msg = "Committing from php")
+    {
+        $this->log->debug("Commit");
+        $this->repo->commit($msg);
+        # $this->pull();
+        $this->log->debug("Push");
+        // I don't understand the push function below
+        // https://github.com/coyl/git/blob/master/src/Coyl/Git/GitRepo.php#L595
+        // After the push, I would always be left with a git status `your repo is ahead of master`
+        // If I just `git pull`, then the msg goes away.
+        // Anyway, I'm solving it with the run call below
+        //$this->repo->push($this->remote,"master");
+        $this->repo->run("push");
+    }
 
   /**
    * repoPath: data repo path since using git-data-repo
@@ -103,45 +117,53 @@ class GitDataRepo {
    *
    * @SuppressWarnings(PHPMD.StaticAccess)
   */
-  public static function initGdrPersistentFromAuthJson($repoPath,$authFn,$remoteUrl,$loglevel,$gitconfig=array()) {
-    // copied from accounting-bdlreports-mapeditor/action.php
+    public static function initGdrPersistentFromAuthJson($repoPath, $authFn, $remoteUrl, $loglevel, $gitconfig = array())
+    {
+        // copied from accounting-bdlreports-mapeditor/action.php
 
-    // check can put files here
-    if(!is_writable($repoPath)) throw new \Exception("Cache folder '".$repoPath."' is not writable. You may need `[sudo] chown www-data:www-data -R ".$repoPath."`");
+        // check can put files here
+        if (!is_writable($repoPath)) {
+            throw new \Exception("Cache folder '".$repoPath."' is not writable. You may need `[sudo] chown www-data:www-data -R ".$repoPath."`");
+        }
 
-    // get remote credentials
-    $remote=null;
-    if(!file_exists($authFn)) throw new \Exception("File not found '".$authFn."'");
-    $remote=json_decode(file_get_contents($authFn),true);
-    $remote=$remote["http-basic"]["bitbucket.org"];
-    $remote=GitDataRepo::injectRemoteCredentials($remoteUrl,$remote["username"],$remote["password"]);
+        // get remote credentials
+        $remote=null;
+        if (!file_exists($authFn)) {
+            throw new \Exception("File not found '".$authFn."'");
+        }
+        $remote=json_decode(file_get_contents($authFn), true);
+        $remote=$remote["http-basic"]["bitbucket.org"];
+        $remote=GitDataRepo::injectRemoteCredentials($remoteUrl, $remote["username"], $remote["password"]);
 
-    # copied from https://github.com/coyl/git/blob/master/src/Coyl/Git/GitRepo.php#L43
-    $isgit=is_dir($repoPath) && file_exists($repoPath . "/.git") && is_dir($repoPath . "/.git");
-    if ($isgit) {
-      $gitRepo = new \Coyl\Git\GitRepo($repoPath,false,false);
-      return new \GitDataRepo\GitDataRepo($gitRepo,$remote,$loglevel);
+        # copied from https://github.com/coyl/git/blob/master/src/Coyl/Git/GitRepo.php#L43
+        $isgit=is_dir($repoPath) && file_exists($repoPath . "/.git") && is_dir($repoPath . "/.git");
+        if ($isgit) {
+            $gitRepo = new \Coyl\Git\GitRepo($repoPath, false, false);
+            return new \GitDataRepo\GitDataRepo($gitRepo, $remote, $loglevel);
+        }
+
+        # case of new git repo
+        $gitRepo = \Coyl\Git\GitRepo::create($repoPath, $remote);
+        # run some git config if needed
+        foreach ($gitconfig as $k => $v) {
+            $cmd = "config ".$k." '".$v."'";
+            $gitRepo->run($cmd);
+        }
+
+        return new \GitDataRepo\GitDataRepo($gitRepo, $remote, $loglevel);
     }
 
-    # case of new git repo
-    $gitRepo = \Coyl\Git\GitRepo::create($repoPath,$remote);
-    # run some git config if needed
-    foreach($gitconfig as $k=>$v) {
-      $cmd = "config ".$k." '".$v."'";
-      $gitRepo->run($cmd);
+    public static function injectRemoteCredentials($url, $username, $password)
+    {
+        $regExp = "/http(s){0,1}:\/\/([^:@]*)/";
+        if (!preg_match($regExp, $url)) {
+            throw new \Exception("Invalid URL format: ".$url);
+        }
+        $remote = preg_replace(
+            $regExp,
+            "http$1://".$username.":".$password."@$2",
+            $url
+        );
+        return $remote;
     }
-
-    return new \GitDataRepo\GitDataRepo($gitRepo,$remote,$loglevel);
-  }
-
-  static function injectRemoteCredentials($url,$username,$password) {
-    $regExp = "/http(s){0,1}:\/\/([^:@]*)/";
-    if(!preg_match($regExp,$url)) throw new \Exception("Invalid URL format: ".$url);
-    $remote = preg_replace(
-     $regExp,
-      "http$1://".$username.":".$password."@$2",
-      $url);
-    return $remote;
-  }
- 
 }
