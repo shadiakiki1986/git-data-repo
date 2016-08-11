@@ -84,4 +84,31 @@ class GitDataRepoTest extends \PHPUnit_Framework_TestCase
         $this->gdr1->set("bla", "foo");
         $this->assertTrue(true);
     }
+
+    public function testPublicReadonlyNew()
+    {
+        $source = "https://github.com/shadiakiki1986/ffa-gdr-public";
+        $path = tempnam("/tmp", "test");
+        unlink($path);
+        $gr = \Coyl\Git\GitRepo::create($path, $source);
+        $gdr = new GitDataRepo($gr, $source);
+        $hml = $gdr->get("sic_countries_hml.json");
+        $this->assertNotNull($hml);
+    }
+
+    public function testPublicReadonlyInit()
+    {
+        $source = "https://github.com/shadiakiki1986/ffa-gdr-public";
+        $path = tempnam("/tmp", "test");
+        unlink($path);
+        mkdir($path);
+        $gdr = GitDataRepo::initGdrPersistentFromAuthJson(
+            $path,
+            false,
+            $source
+        );
+
+        $hml = $gdr->get("sic_countries_hml.json");
+        $this->assertNotNull($hml);
+    }
 }

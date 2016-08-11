@@ -41,8 +41,10 @@ class GitDataRepo
         #$this->repo->pull($this->remote,"master");
         $this->repo->run("pull");
 
-        $this->log->debug("pull step 2/2: push any stale data");
-        $this->repo->run("push");
+        # Probably no need for this since the change of the pull call above to run(pull).
+        # Also, cannot have this push for read-only access.
+        # $this->log->debug("pull step 2/2: push any stale data");
+        # $this->repo->run("push");
     }
 
     public function get($key)
