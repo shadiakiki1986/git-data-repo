@@ -57,6 +57,7 @@ class GitDataRepo
         return(file_get_contents($key2));
     }
 
+    // data: item passable to file_put_contents(key,data)
     public function set($key, $data)
     {
         $this->pull();
