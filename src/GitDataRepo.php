@@ -110,14 +110,14 @@ class GitDataRepo
   /**
    * repoPath: data repo path since using git-data-repo
    *           e.g. /var/cache/ffamfe_tcm
-   * authFn: e.g. __DIR__."/../auth.json"
+   * authFn: e.g. __DIR__."/../auth.json", false for no credentials, e.g. read-only usage of public repo
    * remote, e.g. https://bitbucket.org/shadiakiki1986/ffa-bdlreports-maps
    * loglevel=\Monolog\Logger::WARNING; // isset($argc)?\Monolog\Logger::DEBUG:\Monolog\Logger::WARNING;
    * gitconfig: e.g. array('user.email'=>'my@email.com','user.name'=>'my name')
    *
    * @SuppressWarnings(PHPMD.StaticAccess)
   */
-    public static function initGdrPersistentFromAuthJson($repoPath, $authFn, $remoteUrl, $loglevel, $gitconfig = array())
+    public static function initGdrPersistentFromAuthJson($repoPath, $authFn, $remoteUrl, $loglevel = \Monolog\Logger::WARNING, $gitconfig = array())
     {
         // copied from accounting-bdlreports-mapeditor/action.php
 
@@ -128,12 +128,16 @@ class GitDataRepo
 
         // get remote credentials
         $remote=null;
-        if (!file_exists($authFn)) {
-            throw new \Exception("File not found '".$authFn."'");
+        if ($authFn) {
+            if (!file_exists($authFn)) {
+                throw new \Exception("File not found '".$authFn."'");
+            }
+            $remote=json_decode(file_get_contents($authFn), true);
+            $remote=$remote["http-basic"]["bitbucket.org"];
+            $remote=GitDataRepo::injectRemoteCredentials($remoteUrl, $remote["username"], $remote["password"]);
+        } else {
+            $remote = $remoteUrl;
         }
-        $remote=json_decode(file_get_contents($authFn), true);
-        $remote=$remote["http-basic"]["bitbucket.org"];
-        $remote=GitDataRepo::injectRemoteCredentials($remoteUrl, $remote["username"], $remote["password"]);
 
         # copied from https://github.com/coyl/git/blob/master/src/Coyl/Git/GitRepo.php#L43
         $isgit=is_dir($repoPath) && file_exists($repoPath . "/.git") && is_dir($repoPath . "/.git");

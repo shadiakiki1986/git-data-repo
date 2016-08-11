@@ -91,12 +91,7 @@ I disabled these warnings for the functions in subject.
 To see them, check `grep SuppressWarnings * -r --exclude-dir=vendor`
 
 ## phpcs
-If `phpcs` reports errors that can be fixed automatically, run:
-```bash
-vendor/bin/phpcbf src/
-vendor/bin/phpcbf src/
-```
-and then commit the changes
+If `phpcs` reports errors that can be fixed automatically, run `vendor/bin/phpcbf src/` and then commit the changes
 
 ## badges
 Badges from [badge poser](https://poser.pugx.org/show/shadiakiki1986/git-data-repo#badges)
