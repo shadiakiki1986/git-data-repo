@@ -111,4 +111,46 @@ class GitDataRepoTest extends \PHPUnit_Framework_TestCase
         $hml = $gdr->get("sic_countries_hml.json");
         $this->assertNotNull($hml);
     }
+
+    public function testVersionGet()
+    {
+        $source = "https://github.com/shadiakiki1986/ffa-gdr-public";
+        $path = tempnam("/tmp", "test");
+        unlink($path);
+        mkdir($path);
+        $gdr = GitDataRepo::initGdrPersistentFromAuthJson(
+            $path,
+            false,
+            $source
+        );
+
+        $v1 = $gdr->version();
+        $this->assertEquals(40, strlen($v1));
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+    */
+    public function testVersionAfterSet()
+    {
+        if (!getenv("GITDATAREPO_REMOTE")) {
+            $this->markTestSkipped("Please define env var GITDATAREPO_REMOTE");
+        }
+        $remote = getenv("GITDATAREPO_REMOTE");
+
+
+        $path = tempnam("/tmp", "test");
+        unlink($path);
+        mkdir($path);
+        $gdr = GitDataRepo::initGdrPersistentFromAuthJson(
+            $path,
+            false,
+            $remote
+        );
+
+        $v1 = $gdr->version();
+        $gdr->set("bla", md5(time())); // random string to ensure committing
+        $v2 = $gdr->version();
+        $this->assertNotEquals($v2, $v1);
+    }
 }

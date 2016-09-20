@@ -173,4 +173,11 @@ class GitDataRepo
         );
         return $remote;
     }
+
+    // get the latest full commit hash
+    public function version()
+    {
+        $this->pull();
+        return $this->repo->logFormatted("%H", "", 1); // git log -1 --pretty=format:%H
+    }
 }
