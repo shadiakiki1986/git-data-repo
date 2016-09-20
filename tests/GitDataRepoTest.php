@@ -169,5 +169,4 @@ class GitDataRepoTest extends \PHPUnit_Framework_TestCase
         $dd = $gdr->date();
         $this->assertInstanceOf('DateTime', $dd);
     }
-
 }

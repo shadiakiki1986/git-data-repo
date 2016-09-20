@@ -197,7 +197,6 @@ class GitDataRepo
     {
         $this->pull();
         $dd = $this->repo->logFormatted("%ci", "", 1);
-        return \DateTime::createFromFormat("Y-m-d H:i:s e",$dd);
+        return \DateTime::createFromFormat("Y-m-d H:i:s e", $dd);
     }
-
 }
