@@ -180,4 +180,24 @@ class GitDataRepo
         $this->pull();
         return $this->repo->logFormatted("%H", "", 1); // git log -1 --pretty=format:%H
     }
+
+    /*
+     * Get the latest commit date
+     * returns a DateTime object
+     *
+     * Dev notes:
+     * Using %ci instead of %ct (unix timestamp) to get timezone
+     *
+     * Example UNIX timestamp case
+     * > git log -1 --pretty=format:%ct # outputs 1474354919
+     * > php -r 'var_dump(\DateTime::createFromFormat("U",1474354919,new \DateTimeZone("Asia/Beirut"))->format("Y-m-d H:i:s O"));'
+     *
+     */
+    public function date()
+    {
+        $this->pull();
+        $dd = $this->repo->logFormatted("%ci", "", 1);
+        return \DateTime::createFromFormat("Y-m-d H:i:s e",$dd);
+    }
+
 }

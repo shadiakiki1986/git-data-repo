@@ -153,4 +153,21 @@ class GitDataRepoTest extends \PHPUnit_Framework_TestCase
         $v2 = $gdr->version();
         $this->assertNotEquals($v2, $v1);
     }
+
+    public function testDate()
+    {
+        $source = "https://github.com/shadiakiki1986/ffa-gdr-public";
+        $path = tempnam("/tmp", "test");
+        unlink($path);
+        mkdir($path);
+        $gdr = GitDataRepo::initGdrPersistentFromAuthJson(
+            $path,
+            false,
+            $source
+        );
+
+        $dd = $gdr->date();
+        $this->assertInstanceOf('DateTime', $dd);
+    }
+
 }
