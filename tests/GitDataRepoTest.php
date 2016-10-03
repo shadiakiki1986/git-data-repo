@@ -112,6 +112,22 @@ class GitDataRepoTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($hml);
     }
 
+    public function testFolderGet()
+    {
+        $source = "https://github.com/shadiakiki1986/ffa-gdr-public";
+        $path = tempnam("/tmp", "test");
+        unlink($path);
+        mkdir($path);
+        $gdr = GitDataRepo::initGdrPersistentFromAuthJson(
+            $path,
+            false,
+            $source
+        );
+
+        $hml = $gdr->get("folder/test.json");
+        $this->assertNotNull($hml);
+    }
+
     public function testVersionGet()
     {
         $source = "https://github.com/shadiakiki1986/ffa-gdr-public";
