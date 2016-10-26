@@ -15,5 +15,4 @@ class TempFolderDataRepoTest extends \PHPUnit_Framework_TestCase
         $bla1 = $gdr->get("bla");
         $this->assertEquals($bla1, "foo");
     }
-
 }
