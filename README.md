@@ -101,9 +101,11 @@ I notice often that the chown in composer.json post-install is a problem when I 
 
 Can this repo be changed to a php api for [korya/node-git-rest-api](https://github.com/korya/node-git-rest-api)?
 Can the latter be dockerified?
+Can it clone from github? How do credentials get passed?
 
 If so,
 * change name of repo from GitDataRepo to DataRepo
 * rename class TempFolderDataRepo to TempFolder
 * rename GitDataRepo class to something like GitLocal (this is the one that uses the locally installed git)
 * add class GitRestApi that uses above server
+
