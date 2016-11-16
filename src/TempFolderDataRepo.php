@@ -2,6 +2,7 @@
 namespace GitDataRepo;
 
 // This is a class similar to GitDataRepo but which only uses a folder in the temp folder
+// Use this class if you don't care to have git versioning or git push to a git server, e.g. bitbucket or github
 class TempFolderDataRepo
 {
     public function __construct(string $name)
