@@ -96,8 +96,14 @@ If `phpcs` reports errors that can be fixed automatically, run `vendor/bin/phpcb
 ## badges
 Badges from [badge poser](https://poser.pugx.org/show/shadiakiki1986/git-data-repo#badges)
 
-# TODO
+# TODO: trouble from chown and composer.json post-install cmd
 I notice often that the chown in composer.json post-install is a problem when I use the code from web with www-data user or from shell in docker with root user. This brings up the need for a separate server that is running with its own "stable" filesystem and file permissions. These would at least be independent of developments in the `git-data-repo` library, as well as `composer install` or `composer update` or whatever.
 
 Can this repo be changed to a php api for [korya/node-git-rest-api](https://github.com/korya/node-git-rest-api)?
 Can the latter be dockerified?
+
+If so,
+* change name of repo from GitDataRepo to DataRepo
+* rename class TempFolderDataRepo to TempFolder
+* rename GitDataRepo class to something like GitLocal (this is the one that uses the locally installed git)
+* add class GitRestApi that uses above server
