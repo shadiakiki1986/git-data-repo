@@ -99,11 +99,14 @@ Badges from [badge poser](https://poser.pugx.org/show/shadiakiki1986/git-data-re
 # TODO: trouble from chown and composer.json post-install cmd
 I notice often that the chown in composer.json post-install is a problem when I use the code from web with www-data user or from shell in docker with root user. This brings up the need for a separate server that is running with its own "stable" filesystem and file permissions. These would at least be independent of developments in the `git-data-repo` library, as well as `composer install` or `composer update` or whatever.
 
-Can this repo be changed to a php api for [korya/node-git-rest-api](https://github.com/korya/node-git-rest-api)?
-Can the latter be dockerified?
-Can it clone from github? How do credentials get passed?
+[This](http://stackoverflow.com/a/20023103/4126114) SO answer proposes [Orion Git API](http://wiki.eclipse.org/Orion/Server_API/Git_API), which seems to be my best shot. I also found [korya/node-git-rest-api](https://github.com/korya/node-git-rest-api), but it seems to be ''incomplete'' according to another answer to the SO question. My requirements for the server-side:
+* can clone private repositories by accepting credentials
+* can fetch the contents of a particular file
+* can stage a new file, commit it, and push the commit
+* can stage modifications to an existing file, commit, and push
+* should be dockerifiable (what isnt)
 
-If so,
+After deciding on the server,
 * change name of repo from GitDataRepo to DataRepo
 * rename class TempFolderDataRepo to TempFolder
 * rename GitDataRepo class to something like GitLocal (this is the one that uses the locally installed git)
