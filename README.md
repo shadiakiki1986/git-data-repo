@@ -112,3 +112,12 @@ After deciding on the server,
 * rename GitDataRepo class to something like GitLocal (this is the one that uses the locally installed git)
 * add class GitRestApi that uses above server
 
+EDIT 2016-11-17
+* About TempFolder, I found that it is replaceable by https://github.com/php-cache/filesystem-adapter
+ * check `ffa-mfe/databases-api/var/www/api/customReports.php`
+* About the git backend, I am currently working on the following server-client architecture
+ * https://github.com/shadiakiki1986/docker-node-git-rest-api
+ * https://github.com/shadiakiki1986/git-rest-api-client-php
+* it is still pending resolving https://github.com/korya/node-git-rest-api/issues/1
+* I intend to write a git adapter for http://www.php-cache.com/en/latest/ to work with this server
+
