@@ -16,6 +16,25 @@ Code Climate: [![Code Climate](https://codeclimate.com/github/shadiakiki1986/git
 [![Test Coverage](https://codeclimate.com/github/shadiakiki1986/git-data-repo/badges/coverage.svg)](https://codeclimate.com/github/shadiakiki1986/git-data-repo/coverage)
 [![Issue Count](https://codeclimate.com/github/shadiakiki1986/git-data-repo/badges/issue_count.svg)](https://codeclimate.com/github/shadiakiki1986/git-data-repo)
 
+# DEPRECATED
+I notice often that the chown in composer.json post-install is a problem when I use the code from web with www-data user or from shell in docker with root user. This brings up the need for a separate server that is running with its own "stable" filesystem and file permissions. These would at least be independent of developments in the `git-data-repo` library, as well as `composer install` or `composer update` or whatever.
+
+[This](http://stackoverflow.com/a/20023103/4126114) SO answer proposes [Orion Git API](http://wiki.eclipse.org/Orion/Server_API/Git_API), which unfortunately is not open-source. Another answer on the same SO question noted that [korya/node-git-rest-api](https://github.com/korya/node-git-rest-api) was incomplete, but it met all my requirements for the server-side:
+* can clone private repositories by accepting credentials
+* can fetch the contents of a particular file
+* can stage a new file, commit it, and push the commit
+* can stage modifications to an existing file, commit, and push
+* should be dockerifiable (what isnt)
+
+About the class `TempFolder`, I found that it is replaceable by https://github.com/php-cache/filesystem-adapter
+
+About the class `GitDataRepo`, it is replaced by the following server-client architecture
+* server: https://github.com/shadiakiki1986/docker-node-git-rest-api
+* client: https://github.com/shadiakiki1986/git-rest-api-client-php
+* flysystem-git adapter: https://github.com/shadiakiki1986/flysystem-git
+
+Check the flysystem-git adapter repo for usage
+
 # Installing
 `composer install`
 
@@ -96,28 +115,4 @@ If `phpcs` reports errors that can be fixed automatically, run `vendor/bin/phpcb
 ## badges
 Badges from [badge poser](https://poser.pugx.org/show/shadiakiki1986/git-data-repo#badges)
 
-# TODO: trouble from chown and composer.json post-install cmd
-I notice often that the chown in composer.json post-install is a problem when I use the code from web with www-data user or from shell in docker with root user. This brings up the need for a separate server that is running with its own "stable" filesystem and file permissions. These would at least be independent of developments in the `git-data-repo` library, as well as `composer install` or `composer update` or whatever.
-
-[This](http://stackoverflow.com/a/20023103/4126114) SO answer proposes [Orion Git API](http://wiki.eclipse.org/Orion/Server_API/Git_API), which seems to be my best shot. I also found [korya/node-git-rest-api](https://github.com/korya/node-git-rest-api), but it seems to be ''incomplete'' according to another answer to the SO question. My requirements for the server-side:
-* can clone private repositories by accepting credentials
-* can fetch the contents of a particular file
-* can stage a new file, commit it, and push the commit
-* can stage modifications to an existing file, commit, and push
-* should be dockerifiable (what isnt)
-
-After deciding on the server,
-* change name of repo from GitDataRepo to DataRepo
-* rename class TempFolderDataRepo to TempFolder
-* rename GitDataRepo class to something like GitLocal (this is the one that uses the locally installed git)
-* add class GitRestApi that uses above server
-
-EDIT 2016-11-17
-* About TempFolder, I found that it is replaceable by https://github.com/php-cache/filesystem-adapter
- * check `ffa-mfe/databases-api/var/www/api/customReports.php`
-* About the git backend, I am currently working on the following server-client architecture
- * https://github.com/shadiakiki1986/docker-node-git-rest-api
- * https://github.com/shadiakiki1986/git-rest-api-client-php
-* it is still pending resolving https://github.com/korya/node-git-rest-api/issues/1
-* I intend to write a git adapter for http://www.php-cache.com/en/latest/ to work with this server
 
